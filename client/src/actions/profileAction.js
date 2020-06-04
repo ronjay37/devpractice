@@ -42,7 +42,7 @@ export const getProfiles = () => async (dispatch) => {
 
 
 
-//Get profile by id
+//Get profile by id 
 
 export const getProfileById = (user_id) => async (dispatch) => {
 
@@ -53,6 +53,8 @@ try {
         payload: res.data
     });
 } catch (err) {
+    window.confirm("The user has not yet created a profile!")
+    window.location.href='/posts';
     dispatch({
         type: PROFILE_ERROR,
         payload: { msg: err.response.statusText, status: err.response.status }
