@@ -24,6 +24,8 @@ export const getPosts = () => async (dispatch) => {
       type: GET_POSTS,
       payload: res.data
     });
+
+    window.scrollTo(0, 0);
   } catch (err) {
     dispatch({
       type: POST_ERROR,
@@ -79,8 +81,8 @@ export const deletePost = (post_id) => async (dispatch) => {
         type: DELETE_POST,
         payload: post_id
       });
-      window.scrollTo(0, 0);
-      dispatch(setAlert("Post Removed!", "success", 5000));
+      // window.scrollTo(0, 0);
+      alert("Post Removed!");
     } catch (err) {
       dispatch({
         type: POST_ERROR,
@@ -106,7 +108,7 @@ export const addPost = (formData) => async (dispatch) => {
       payload: res.data
     });
     window.scrollTo(0, 0);
-    dispatch(setAlert("Post Created!", "success", 5000));
+    dispatch(setAlert("Post Created!", "success", 3000));
   } catch (err) {
     dispatch({
       type: POST_ERROR,
@@ -117,9 +119,9 @@ export const addPost = (formData) => async (dispatch) => {
 
 // Get single post
 export const getSinglePost = (post_id) => async (dispatch) => {
-  //   dispatch({
-  //     type: CLEAR_PROFILE
-  //   });
+  dispatch({
+    type: CLEAR_PROFILE
+  });
   try {
     const res = await axios.get(`/api/posts/${post_id}`);
 
@@ -127,6 +129,7 @@ export const getSinglePost = (post_id) => async (dispatch) => {
       type: GET_POST,
       payload: res.data
     });
+    window.scrollTo(0, 0);
   } catch (err) {
     dispatch({
       type: POST_ERROR,
@@ -154,8 +157,8 @@ export const addComment = (post_id, formData) => async (dispatch) => {
       type: ADD_COMMENT,
       payload: res.data
     });
-    window.scrollTo(0, 0);
-    dispatch(setAlert("Comment Added!", "success", 5000));
+    window.scrollTo(0, document.body.scrollHeight);
+    dispatch(setAlert("Comment Added!", "success", 3000));
   } catch (err) {
     dispatch({
       type: POST_ERROR,
@@ -170,7 +173,6 @@ export const deleteComment = (post_id, comment_id) => async (dispatch) => {
   if (window.confirm("Are you sure? This cannot be undone!")) {
     try {
       await axios.delete(`/api/posts/comment/${post_id}/${comment_id}`);
-
       dispatch({
         type: REMOVE_COMMENT,
         payload: comment_id

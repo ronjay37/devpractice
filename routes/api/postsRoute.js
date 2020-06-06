@@ -83,8 +83,9 @@ router.delete("/:id", auth, async (req, res) => {
   try {
     const post = await PostModel.findById(req.params.id);
 
+    //This is not included on brad's repository
     if (!post) {
-      return res.status(404).json({ msg: "Profile not found!" });
+      return res.status(404).json({ msg: "Post not found!" });
     }
 
     //Check on user
@@ -145,11 +146,15 @@ router.put("/unlike/:id", auth, async (req, res) => {
     }
 
     //Get remove index
-    const removeIndex = post.likes
-      .map((like) => like.user.toString())
-      .indexOf(req.user.id);
+    // const removeIndex = post.likes
+    //   .map((like) => like.user.toString())
+    //   .indexOf(req.user.id);
 
-    post.likes.splice(removeIndex, 1);
+    // post.likes.splice(removeIndex, 1);
+
+    post.likes = post.likes.filter(
+      (like) => like.user.toString() !== req.user.id
+    );
 
     await post.save();
 
@@ -185,7 +190,7 @@ router.post(
         user: req.user.id
       };
 
-      post.comments.unshift(newComment);
+      post.comments.push(newComment);
 
       await post.save();
       res.json(post.comments);
@@ -196,43 +201,40 @@ router.post(
   }
 );
 
-//DELETE api/posts/comment/:post_id/:comment_id
-//Delete a comment
-//Private
-
-router.delete("/comment/:post_id/:comment_id", auth, async (req, res) => {
+//////////////////////////////////////////
+// @route    DELETE api/posts/comment/:id/:comment_id
+// @desc     Delete comment
+// @access   Private
+router.delete("/comment/:id/:comment_id", auth, async (req, res) => {
   try {
-    const post = await PostModel.findById(req.params.post_id);
+    const post = await PostModel.findById(req.params.id);
 
-    //Pull out comment
-    //find method, this actually takes foreach, map, filter
+    // Pull out comment
     const comment = post.comments.find(
       (comment) => comment.id === req.params.comment_id
     );
-
-    //Make sure comment exists
+    // Make sure comment exists
     if (!comment) {
-      return res.status(404).json({ msg: "Comment does not exist!" });
+      return res.status(404).json({ msg: "Comment does not exist" });
     }
-
-    //Check logged in user
+    // Check user
     if (comment.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: "User not authorized!" });
+      return res.status(401).json({ msg: "User not authorized" });
     }
 
-    //Get remove index
-    const removeIndex = post.comments
-      .map((comment) => comment.user.toString())
-      .indexOf(req.user.id);
-
-    post.comments.splice(removeIndex, 1);
+    // post.comments = post.comments.filter(
+    //   ({ id }) => id !== req.params.comment_id
+    // );
+    post.comments = post.comments.filter(
+      (comment) => comment.id !== req.params.comment_id
+    );
 
     await post.save();
 
     res.json(post.comments);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error!");
+    return res.status(500).send("Server Error");
   }
 });
 

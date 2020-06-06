@@ -62,9 +62,10 @@ export default function (state = initialState, action) {
     case ADD_COMMENT:
       return {
         ...state,
-        post: { ...state, comments: action.payload },
+        post: { ...state.post, comments: action.payload },
         loading: false
       };
+
     case REMOVE_COMMENT:
       return {
         ...state,

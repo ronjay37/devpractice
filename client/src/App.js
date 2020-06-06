@@ -4,7 +4,7 @@ import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import AlertLayout from "./components/layout/AlertLayout";
+//import AlertLayout from "./components/layout/AlertLayout";
 import Dashboard from "./components/dashboard/Dashboard";
 import CreateProfile from "./components/profile-form/CreateProfile";
 import EditProfile from "./components/profile-form/EditProfile";
@@ -37,12 +37,11 @@ const App = () => {
       <Router>
         <Fragment>
           <Navbar />
-
           <Switch>
             <Route exact path="/" component={Landing} />
             <Fragment>
               <section className="container">
-                <AlertLayout />
+                {/* <AlertLayout /> */}
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/profiles" component={Profiles} />
